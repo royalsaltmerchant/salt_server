@@ -98,7 +98,6 @@ def api_verify_jwt():
         token = token_split[1]
 
     if not token:
-        raise
         return Response(
             response='No token passed',
             status=400
