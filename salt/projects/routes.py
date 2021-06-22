@@ -54,6 +54,31 @@ def api_add_project(current_user):
   except:
     raise
 
+@projects.route('/api/edit_project', methods=['POST'])
+@token_required
+def api_edit_project(current_user):
+  try:
+    data = json.loads(request.data)
+    project_id = data['project_id']
+    project_to_edit = db.session.query(Project).filter_by(id=project_id).first()
+    project_to_edit.title = data['title']
+    project_to_edit.description = data['description']
+    project_to_edit.image_file = data['image_file']
+    project_to_edit.active = data['active']
+    project_to_edit.complete = data['complete']
+
+    db.session.commit()
+
+    project_serialized = project_schema.dump(project_to_edit)
+    response = Response(
+        response=json.dumps(project_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+  except:
+    raise
+
 @projects.route('/api/remove_project', methods=['POST'])
 @token_required
 def api_remove_project(current_user):
@@ -108,6 +133,30 @@ def api_add_entry(current_user):
         mimetype='application/json'
     )
 
+    return response
+  except:
+    raise
+
+@projects.route('/api/edit_entry', methods=['POST'])
+@token_required
+def api_edit_entry(current_user):
+  try:
+    data = json.loads(request.data)
+    entry_id = data['entry_id']
+    entry_to_edit = db.session.query(Entry).filter_by(id=entry_id).first()
+    entry_to_edit.title = data['title']
+    entry_to_edit.amount = data['amount']
+    entry_to_edit.description = data['description']
+    entry_to_edit.complete = data['complete']
+
+    db.session.commit()
+
+    entry_serialized = entry_schema.dump(entry_to_edit)
+    response = Response(
+        response=json.dumps(entry_serialized),
+        status=200,
+        mimetype='application/json'
+    )
     return response
   except:
     raise

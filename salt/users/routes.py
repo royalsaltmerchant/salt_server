@@ -20,9 +20,12 @@ def api_register():
         data = json.loads(request.data)
         username = data['username']
         email = data['email'].lower()
+        first_name = data['first_name'].lower()
+        last_name = data['last_name'].lower()
+        admin = data['admin']
         hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
 
-        user = User(username=username, email=email, password=hashed_password)
+        user = User(username=username, email=email, first_name=first_name, last_name=last_name, admin=admin, password=hashed_password)
         db.session.add(user)
         db.session.commit()
 
@@ -42,28 +45,31 @@ def api_register():
 
 @users.route('/api/login', methods=['GET', 'POST'])
 def api_login():
-    data = json.loads(request.data)
+    try:
+        data = json.loads(request.data)
+        username = data['username_or_email']
+        email = data['username_or_email'].lower()
+        user = User.query.filter_by(email=email).first() or User.query.filter_by(username=username).first()
+        if user and bcrypt.check_password_hash(user.password, data['password']):
+            payload = {
+                'user_id': user.id,
+                'exp': datetime.datetime.utcnow()+datetime.timedelta(hours=24)
+                }
+            token = jwt.encode(payload, os.environ.get('SECRET_KEY'), algorithm="HS256")
 
-    email = data['email'].lower()
-    user = User.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, data['password']):
-        payload = {
-            'user_id': user.id,
-            'exp': datetime.datetime.utcnow()+datetime.timedelta(hours=24)
-            }
-        token = jwt.encode(payload, os.environ.get('SECRET_KEY'), algorithm="HS256")
-
-        response = Response(
-            response=json.dumps({'token': token}),
-            status=200,
-            mimetype='application/json'
-    )
-        return response
-    else:
-        return Response(
-            response='Incorrect account information',
-            status=400
+            response = Response(
+                response=json.dumps({'token': token}),
+                status=200,
+                mimetype='application/json'
         )
+            return response
+        else:
+            return Response(
+                response='Incorrect account information',
+                status=400
+            )
+    except:
+        raise
 
 def token_required(f):
     @wraps(f)
@@ -76,7 +82,6 @@ def token_required(f):
                 verification = jwt.decode(token, os.environ.get('SECRET_KEY'), algorithms=["HS256"])
                 current_user = db.session.query(User).filter_by(id=verification['user_id']).first()
             except:
-                raise
                 return jsonify({'message': 'Invalid token or user'})
 
         else:
@@ -117,23 +122,28 @@ def api_verify_jwt():
 @users.route('/api/get_user', methods=['GET', 'POST'])
 @token_required
 def get_user(current_user):
-    user_serialized = user_schema.dump(current_user)
-    return Response(
-        response=json.dumps(user_serialized),
-        status=200,
-        mimetype='application/json'
-    )
+    try:
+        user_serialized = user_schema.dump(current_user)
+        return Response(
+            response=json.dumps(user_serialized),
+            status=200,
+            mimetype='application/json'
+        )
+    except:
+        raise
 
-@users.route('/api/update_user', methods={'POST'})
+@users.route('/api/edit_user', methods={'POST'})
 @token_required
-def update_user(current_user):
-    # if request.files['image_file']:
-    #     picture_hex = save_picture(request.files['image_file'])
-    #     current_user.image_file = picture_hex
-    if request.form['email']:
-        current_user.email = request.form['email'].lower()
-    if request.form['username']:
-        current_user.username = request.form['username']
+def edit_user(current_user):
+    data = json.loads(request.data)
+    if 'email' in data:
+        current_user.email = data['email'].lower()
+    if 'username' in data:
+        current_user.username = data['username']
+    if 'eligible' in data:
+        current_user.eligible = data['eligible']
+    if 'approved_asset_count' in data:
+        current_user.approved_asset_count = data['approved_asset_count']  
     db.session.commit()
     user_serialized = user_schema.dump(current_user)
 
