@@ -5,9 +5,13 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
-    admin = db.Column(db.Boolean, nullable=True, default=False)
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
+    eligible = db.Column(db.Boolean, nullable=True, default=False)
+    approved_asset_count = db.Column(db.Integer, nullable=True, default=0)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -24,3 +28,18 @@ class User(db.Model):
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
+
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(), nullable=False)
+    image_file = db.Column(db.String(120), nullable=True)
+    active = db.Column(db.Boolean, nullable=True, default=False)
+    complete = db.Column(db.Boolean, nullable=True, default=False)
+
+class Entry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(), nullable=False)
+    amount = db.Column(db.Integer, nullable=False, default=1)
+    complete = db.Column(db.Boolean, nullable=True, default=False)

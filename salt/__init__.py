@@ -26,7 +26,9 @@ def create_app(config_class=Config):
 
     from salt.users.routes import users
     from salt.main.routes import main
+    from salt.projects.routes import projects
     app.register_blueprint(users)
     app.register_blueprint(main)
+    app.register_blueprint(projects)
 
     return app                
