@@ -1,6 +1,7 @@
 from salt import db
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from datetime import datetime
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,6 +13,7 @@ class User(db.Model):
     password = db.Column(db.String(60), nullable=False)
     eligible = db.Column(db.Boolean, nullable=True, default=False)
     approved_asset_count = db.Column(db.Integer, nullable=True, default=0)
+    contributions = db.relationship('Contribution', backref='user', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -36,10 +38,23 @@ class Project(db.Model):
     image_file = db.Column(db.String(120), nullable=True)
     active = db.Column(db.Boolean, nullable=True, default=False)
     complete = db.Column(db.Boolean, nullable=True, default=False)
+    entries = db.relationship('Entry', backref='Project', lazy=True)
+    contributions = db.relationship('Contribution', backref='project', lazy=True)
 
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(), nullable=False)
     amount = db.Column(db.Integer, nullable=False, default=1)
     complete = db.Column(db.Boolean, nullable=True, default=False)
+    contributions = db.relationship('Contribution', backref='entry', lazy=True)
+
+class Contribution(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    status = db.Column(db.String(60), nullable=False, default='Pending')
+    amount = db.Column(db.Integer, nullable=False, default=1) 
