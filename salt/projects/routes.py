@@ -221,6 +221,7 @@ def api_edit_contribution(current_user):
     data = json.loads(request.data)
     contribution_id = data['contribution_id']
     contribution_to_edit = db.session.query(Contribution).filter_by(id=contribution_id).first()
+    contribution_to_edit.amount = data['amount']
     contribution_to_edit.status = data['status']
 
     db.session.commit()
