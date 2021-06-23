@@ -39,10 +39,8 @@ def api_add_project(current_user):
     title = data['title']
     description = data['description']
     image_file = data['image_file']
-    active = data['active']
-    complete = data['complete']
 
-    project = Project(title=title, description=description, image_file=image_file, active=active, complete=complete)
+    project = Project(title=title, description=description, image_file=image_file)
     db.session.add(project)
     db.session.commit()
 
