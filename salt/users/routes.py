@@ -132,6 +132,19 @@ def get_user(current_user):
     except:
         raise
 
+@users.route('/api/users', methods=['GET', 'POST'])
+def get_users():
+    try:
+        users = db.session.query(User).all()
+        users_serialized = users_schema.dump(users)
+        return Response(
+            response=json.dumps(users_serialized),
+            status=200,
+            mimetype='application/json'
+        )
+    except:
+        raise
+
 @users.route('/api/edit_user', methods={'POST'})
 @token_required
 def edit_user(current_user):
