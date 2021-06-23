@@ -127,9 +127,8 @@ def api_add_entry(current_user):
     title = data['title']
     description = data['description']
     amount = data['amount']
-    complete = data['complete']
 
-    entry = Entry(project_id=project_id, title=title, description=description, amount=amount, complete=complete)
+    entry = Entry(project_id=project_id, title=title, description=description, amount=amount)
     db.session.add(entry)
     db.session.commit()
 

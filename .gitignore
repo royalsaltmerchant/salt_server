@@ -1,2 +1,3 @@
 .vscode
 .flaskenv
+.DS_Store
