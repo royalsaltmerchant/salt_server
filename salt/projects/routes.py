@@ -16,6 +16,24 @@ entries_schema = EntrySchema(many=True)
 contribution_schema = ContributionSchema()
 contributions_schema = ContributionSchema(many=True)
 
+@projects.route("/api/get_project", methods=['POST'])
+@token_required
+def api_get_project(current_user):
+  try:
+    data = json.loads(request.data)
+    project_id = data['project_id']
+    project = db.session.query(Project).filter_by(id=project_id).first()
+
+    project_serialized = project_schema.dump(project)
+    response = Response(
+        response=json.dumps(project_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+  except:
+    raise
+
 @projects.route("/api/projects", methods=['GET'])
 def api_projects():
   try:
