@@ -118,6 +118,24 @@ def api_entries():
   except:
     raise
 
+@projects.route("/api/get_entry", methods=['POST'])
+@token_required
+def api_get_entry(current_user):
+  try:
+    data = json.loads(request.data)
+    entry_id = data['entry_id']
+    entry = db.session.query(Entry).filter_by(id=entry_id).first()
+
+    entry_serialized = entry_schema.dump(entry)
+    response = Response(
+        response=json.dumps(entry_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+  except:
+    raise
+
 @projects.route('/api/add_entry', methods=['POST'])
 @token_required
 def api_add_entry(current_user):
