@@ -1,3 +1,4 @@
 .vscode
 .flaskenv
 .DS_Store
+variables.env
