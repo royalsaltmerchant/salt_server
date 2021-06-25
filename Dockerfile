@@ -1,4 +1,7 @@
-FROM python:3.9.0
+FROM python:3.8-slim
+
+RUN apt-get update
+RUN apt-get install -y postgresql libpq-dev postgresql-client postgresql-client-common gcc
 
 WORKDIR /
 
