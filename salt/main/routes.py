@@ -2,6 +2,9 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint,
 import logging, json
 import os
 from salt.models import User
+from salt.users.routes import token_required
+import boto3
+from botocore.exceptions import ClientError
 
 main = Blueprint('main', __name__)
 
@@ -26,3 +29,22 @@ def health_check():
 @main.route('/home')
 def home():
   return render_template('home.html')
+
+@main.route('/api/signed_URL', methods=['POST'])
+@token_required
+def create_presigned_url(current_user):
+    s3_client = boto3.client('s3')
+    try:
+        data = json.loads(request.data)
+        bucket_name = data['bucket_name']
+        object_name = data['object_name']
+        response = s3_client.generate_presigned_url('get_object',
+                                                    Params={'Bucket': bucket_name,
+                                                            'Key': object_name},
+                                                    ExpiresIn=6000)
+    except ClientError as e:
+        logging.error(e)
+        return None
+
+    return response
+
