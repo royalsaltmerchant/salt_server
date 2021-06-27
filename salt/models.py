@@ -43,7 +43,7 @@ class Project(db.Model):
 
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(), nullable=False)
     amount = db.Column(db.Integer, nullable=False, default=1)
