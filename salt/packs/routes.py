@@ -71,6 +71,8 @@ def api_edit_pack(current_user):
       pack_to_edit.video_file = data['video_file']
     if 'coin_cost' in data:
       pack_to_edit.coin_cost = data['coin_cost']
+    if 'active' in data:
+      pack_to_edit.active = data['active']
 
     db.session.commit()
 

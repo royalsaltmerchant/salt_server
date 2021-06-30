@@ -37,8 +37,8 @@ class Project(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(), nullable=False)
     image_file = db.Column(db.String(120), nullable=True)
-    active = db.Column(db.Boolean, nullable=True, default=False)
-    complete = db.Column(db.Boolean, nullable=True, default=False)
+    active = db.Column(db.Boolean, nullable=False, default=False)
+    complete = db.Column(db.Boolean, nullable=False, default=False)
     entries = db.relationship('Entry', backref='Project', lazy=True)
     contributions = db.relationship('Contribution', backref='project', lazy=True)
 
@@ -48,7 +48,7 @@ class Entry(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(), nullable=False)
     amount = db.Column(db.Integer, nullable=False, default=1)
-    complete = db.Column(db.Boolean, nullable=True, default=False)
+    complete = db.Column(db.Boolean, nullable=False, default=False)
     contributions = db.relationship('Contribution', backref='entry', lazy=True)
 
 class Contribution(db.Model):
@@ -68,6 +68,7 @@ class Pack(db.Model):
     video_file = db.Column(db.String(120), nullable=False)
     downloads = db.Column(db.Integer, nullable=False, default=0)
     coin_cost = db.Column(db.Integer, nullable=False, default=0)
+    active = db.Column(db.Boolean, nullable=False, default=False)
     asset_types = db.relationship('AssetType', backref='pack', lazy=True)
 
 class AssetType(db.Model):
