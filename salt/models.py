@@ -13,6 +13,7 @@ class User(db.Model):
     password = db.Column(db.String(60), nullable=False)
     eligible = db.Column(db.Boolean, nullable=True, default=False)
     approved_asset_count = db.Column(db.Integer, nullable=True, default=0)
+    coins = db.Column(db.Integer, nullable=True, default=0)
     contributions = db.relationship('Contribution', backref='user', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):

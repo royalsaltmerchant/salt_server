@@ -156,7 +156,9 @@ def edit_user(current_user):
     if 'eligible' in data:
         current_user.eligible = data['eligible']
     if 'approved_asset_count' in data:
-        current_user.approved_asset_count = data['approved_asset_count']  
+        current_user.approved_asset_count = data['approved_asset_count']
+    if 'coins' in data:
+        current_user.coins = data['coins']  
     db.session.commit()
     user_serialized = user_schema.dump(current_user)
 
