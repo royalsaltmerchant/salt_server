@@ -1,4 +1,4 @@
-from salt.models import User, Project, Entry, Contribution
+from salt.models import User, Project, Entry, Contribution, Pack, AssetType
 from salt import ma
 import logging, json
 
@@ -25,3 +25,14 @@ class ContributionSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Contribution
         fields = ("id", "date_create", "amount", "project_id", "entry_id", "user_id", "status")
+
+class PackSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Pack
+        fields = ("id", "title", "description", "image_file", "video_file", "downloads" "coin_cost", "asset_types")
+    asset_types = ma.Nested('AssetTypeSchema', many=True)
+
+class AssetTypeSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = AssetType
+        fields = ("id", "description", "pack_id")

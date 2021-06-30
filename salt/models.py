@@ -58,4 +58,19 @@ class Contribution(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     status = db.Column(db.String(60), nullable=False, default='Pending')
-    amount = db.Column(db.Integer, nullable=False, default=1) 
+    amount = db.Column(db.Integer, nullable=False, default=1)
+
+class Pack(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(), nullable=False)
+    image_file = db.Column(db.String(120), nullable=False)
+    video_file = db.Column(db.String(120), nullable=False)
+    downloads = db.Column(db.Integer, nullable=False, default=0)
+    coin_cost = db.Column(db.Integer, nullable=False, default=0)
+    asset_types = db.relationship('AssetType', backref='pack', lazy=True)
+
+class AssetType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(), nullable=False)
+    pack_id = db.Column(db.Integer, db.ForeignKey('pack.id'))
