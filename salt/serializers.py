@@ -29,7 +29,7 @@ class ContributionSchema(ma.SQLAlchemySchema):
 class PackSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Pack
-        fields = ("id", "title", "description", "image_file", "video_file", "downloads" "coin_cost", "active", "asset_types")
+        fields = ("id", "title", "description", "image_file", "video_file", "downloads", "coin_cost", "active", "asset_types")
     asset_types = ma.Nested('AssetTypeSchema', many=True)
 
 class AssetTypeSchema(ma.SQLAlchemySchema):
