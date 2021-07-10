@@ -28,6 +28,23 @@ def api_packs():
   except:
     raise
 
+@packs.route("/api/get_pack", methods=['POST'])
+def api_get_pack():
+  try:
+    data = json.loads(request.data)
+    pack_id = data['pack_id']
+    pack = db.session.query(Pack).filter_by(id=pack_id).first()
+
+    pack_serialized = pack_schema.dump(pack)
+    response = Response(
+        response=json.dumps(pack_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+  except:
+    raise
+
 @packs.route('/api/add_pack', methods=['POST'])
 @token_required
 def api_add_pack(current_user):
@@ -120,8 +137,7 @@ def api_asset_types():
     raise
 
 @packs.route("/api/get_asset_type", methods=['POST'])
-@token_required
-def api_get_asset_type(current_user):
+def api_get_asset_type():
   try:
     data = json.loads(request.data)
     asset_type_id = data['asset_type_id']

@@ -17,8 +17,7 @@ contribution_schema = ContributionSchema()
 contributions_schema = ContributionSchema(many=True)
 
 @projects.route("/api/get_project", methods=['POST'])
-@token_required
-def api_get_project(current_user):
+def api_get_project():
   try:
     data = json.loads(request.data)
     project_id = data['project_id']
@@ -137,8 +136,7 @@ def api_entries():
     raise
 
 @projects.route("/api/get_entry", methods=['POST'])
-@token_required
-def api_get_entry(current_user):
+def api_get_entry():
   try:
     data = json.loads(request.data)
     entry_id = data['entry_id']
