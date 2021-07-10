@@ -28,12 +28,12 @@ def api_packs():
   except:
     raise
 
-@packs.route("/api/get_pack", methods=['POST'])
-def api_get_pack():
+@packs.route("/api/get_pack_by_title", methods=['POST'])
+def api_get_pack_by_title():
   try:
     data = json.loads(request.data)
-    pack_id = data['pack_id']
-    pack = db.session.query(Pack).filter_by(id=pack_id).first()
+    pack_title = data['pack_title']
+    pack = db.session.query(Pack).filter_by(title=pack_title).first()
 
     pack_serialized = pack_schema.dump(pack)
     response = Response(
