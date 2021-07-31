@@ -1,8 +1,8 @@
 from flask import request, Blueprint, Response, jsonify
 from salt import db, bcrypt
-from salt.models import Project, Entry, Contribution
+from salt.models import Project, Entry, Contribution, ContributedAsset
 from salt.users.routes import token_required
-from salt.serializers import ProjectSchema, EntrySchema, ContributionSchema
+from salt.serializers import ProjectSchema, EntrySchema, ContributionSchema, ContributedAssetSchema
 import logging, json
 
 projects = Blueprint('projects', __name__)
@@ -15,6 +15,9 @@ entries_schema = EntrySchema(many=True)
 
 contribution_schema = ContributionSchema()
 contributions_schema = ContributionSchema(many=True)
+
+contributed_asset_schema = ContributedAssetSchema()
+contributed_assets_schema = ContributedAssetSchema(many=True)
 
 @projects.route("/api/get_project", methods=['POST'])
 def api_get_project():
@@ -285,6 +288,29 @@ def api_remove_contribution(current_user):
         response='contribution has been removed',
         status=200
         )
+  except:
+    raise
+
+@projects.route('/api/add_contributed_asset', methods=['POST'])
+@token_required
+def api_add_contributed_asset(current_user):
+  try:
+    data = json.loads(request.data)
+    contribution_id = data['contribution_id']
+    name = data['name']
+
+    contributed_asset = ContributedAsset(contribution_id=contribution_id, name=name)
+    db.session.add(contributed_asset)
+    db.session.commit()
+
+    contributed_asset_serialized = contributed_asset_schema.dump(contributed_asset)
+    response = Response(
+        response=json.dumps(contributed_asset_serialized),
+        status=201,
+        mimetype='application/json'
+    )
+
+    return response
   except:
     raise
 
