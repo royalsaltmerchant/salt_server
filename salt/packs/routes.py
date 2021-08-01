@@ -90,6 +90,8 @@ def api_edit_pack(current_user):
       pack_to_edit.coin_cost = data['coin_cost']
     if 'active' in data:
       pack_to_edit.active = data['active']
+    if 'downloads' in data:
+      pack_to_edit.downloads = data['downloads']
 
     db.session.commit()
 
