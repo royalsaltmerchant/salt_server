@@ -150,18 +150,20 @@ def get_users(current_user):
 @token_required
 def edit_user(current_user):
     data = json.loads(request.data)
+    user_id = data['user_id']
+    user_to_edit = db.session.query(User).filter_by(id=user_id).first()
     if 'email' in data:
-        current_user.email = data['email'].lower()
+        user_to_edit.email = data['email'].lower()
     if 'username' in data:
-        current_user.username = data['username']
+        user_to_edit.username = data['username']
     if 'eligible' in data:
-        current_user.eligible = data['eligible']
+        user_to_edit.eligible = data['eligible']
     if 'approved_asset_count' in data:
-        current_user.approved_asset_count = data['approved_asset_count']
+        user_to_edit.approved_asset_count = data['approved_asset_count']
     if 'coins' in data:
-        current_user.coins = data['coins']  
+        user_to_edit.coins = data['coins']  
     db.session.commit()
-    user_serialized = user_schema.dump(current_user)
+    user_serialized = user_schema.dump(user_to_edit)
 
     return Response(
         response=json.dumps(user_serialized),
