@@ -24,7 +24,7 @@ class EntrySchema(ma.SQLAlchemySchema):
 class ContributionSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Contribution
-        fields = ("id", "date_create", "amount", "project_id", "entry_id", "user_id", "status", "contributed_assets")
+        fields = ("id", "date_created", "amount", "project_id", "entry_id", "user_id", "status", "contributed_assets")
     contributed_assets = ma.Nested('ContributedAssetSchema', many=True)
 
 class ContributedAssetSchema(ma.SQLAlchemySchema):
