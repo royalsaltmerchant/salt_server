@@ -11,7 +11,6 @@ class User(db.Model):
     admin = db.Column(db.Boolean, nullable=False, default=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    eligible = db.Column(db.Boolean, nullable=True, default=False)
     approved_asset_count = db.Column(db.Integer, nullable=True, default=0)
     coins = db.Column(db.Integer, nullable=True, default=0)
     contributions = db.relationship('Contribution', backref='user', lazy=True)
