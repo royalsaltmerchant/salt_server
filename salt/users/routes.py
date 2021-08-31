@@ -156,8 +156,6 @@ def edit_user(current_user):
         user_to_edit.email = data['email'].lower()
     if 'username' in data:
         user_to_edit.username = data['username']
-    if 'eligible' in data:
-        user_to_edit.eligible = data['eligible']
     if 'approved_asset_count' in data:
         user_to_edit.approved_asset_count = data['approved_asset_count']
     if 'coins' in data:
