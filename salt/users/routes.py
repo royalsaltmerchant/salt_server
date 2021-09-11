@@ -22,7 +22,8 @@ def api_register():
         email = data['email'].lower()
         first_name = data['first_name'].lower()
         last_name = data['last_name'].lower()
-        admin = data['admin']
+        if 'admin' in data:
+            admin = data['admin']
         hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
 
         user = User(username=username, email=email, first_name=first_name, last_name=last_name, admin=admin, password=hashed_password)
