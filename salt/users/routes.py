@@ -25,7 +25,7 @@ def api_register():
         admin = data['admin'] if 'admin' in data else False
         hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
 
-        user = User(username=username,email=email,first_name=first_name,last_name=last_name,admin=admin,password=hashed_password)
+        user = User(username=username, email=email, first_name=first_name, last_name=last_name, admin=admin, password=hashed_password)
         db.session.add(user)
         db.session.commit()
 
