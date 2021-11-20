@@ -55,6 +55,6 @@ from salt import mail
 
 def send_reset_email(user):
     token = user.get_reset_token()
-    msg = Message('Password reset request', sender='testerdemosalt@gmail.com', recipients=[user.email])
-    msg.body = f"To reset your password, visit the following link: https://www.zennit.app/reset_password/{token}    .... if you did not make this request, simply ignore this email and no changes will be made"
+    msg = Message('SFAudioGuild Password Reset', sender='testerdemosalt@gmail.com', recipients=[user.email])
+    msg.body = f"To reset your password, visit the following link: https://www.app.sfaudioguild.com/reset_password/{token}    .... if you did not make this request, simply ignore this email and no changes will be made"
     mail.send(msg)
