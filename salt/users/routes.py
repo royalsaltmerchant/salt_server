@@ -53,7 +53,7 @@ def api_login():
         if user and bcrypt.check_password_hash(user.password, data['password']):
             payload = {
                 'user_id': user.id,
-                'exp': datetime.datetime.utcnow()+datetime.timedelta(hours=24)
+                'exp': datetime.datetime.utcnow()+datetime.timedelta(hours=168)
                 }
             token = jwt.encode(payload, os.environ.get('SECRET_KEY'), algorithm="HS256")
 
