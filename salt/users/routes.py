@@ -2,7 +2,7 @@ from flask import request, Blueprint, Response, jsonify, current_app
 from salt import db, bcrypt
 from salt.models import User
 from salt.serializers import UserSchema
-from salt.users.utils import send_reset_email
+from salt.users.utils import send_reset_email, send_update_coins_email
 from functools import wraps
 import logging, json
 import jwt
@@ -160,6 +160,8 @@ def edit_user(current_user):
         user_to_edit.approved_asset_count = data['approved_asset_count']
     if 'coins' in data:
         user_to_edit.coins = data['coins']  
+        # send coins email
+        send_update_coins_email(current_user, str(data['coins']))
     db.session.commit()
     user_serialized = user_schema.dump(user_to_edit)
 
