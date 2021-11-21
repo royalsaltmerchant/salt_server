@@ -16,6 +16,7 @@ def send_reset_email(user):
 
 def send_update_coins_email(user, coins):
     email = user.email
+    name = user.username
     msg = Message('SFAudioGuild Coin Count Update', sender=email_sender, recipients=[email])
-    msg.body = f"Your coin count has changed! You now have {coins} coins."
+    msg.body = f"Hey {name},\nYour coin count has changed! You now have {coins} coins.\nThanks for your contributions and purchases!\n- SFAudioGuild Staff"
     mail.send(msg)
