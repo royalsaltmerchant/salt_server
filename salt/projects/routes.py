@@ -226,6 +226,24 @@ def api_remove_entry(current_user):
   except:
     raise
 
+@projects.route("/api/get_contribution", methods=['POST'])
+@token_required
+def api_get_contribution(current_user):
+  try:
+    data = json.loads(request.data)
+    contribution_id = data['contribution_id']
+    contribution = db.session.query(Contribution).filter_by(id=contribution_id).first()
+
+    contribution_serialized = contribution_schema.dump(contribution)
+    response = Response(
+        response=json.dumps(contribution_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+  except:
+    raise
+
 @projects.route('/api/add_contribution', methods=['POST'])
 @token_required
 def api_add_contribution(current_user):
