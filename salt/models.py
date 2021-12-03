@@ -64,6 +64,7 @@ class Contribution(db.Model):
 class ContributedAsset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.String(), default='pending')
     contribution_id = db.Column(db.Integer, db.ForeignKey('contribution.id'))
 
 class Pack(db.Model):
@@ -80,5 +81,4 @@ class Pack(db.Model):
 class AssetType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(), nullable=False)
-    status = db.Column(db.String(), default='pending')
     pack_id = db.Column(db.Integer, db.ForeignKey('pack.id'))
