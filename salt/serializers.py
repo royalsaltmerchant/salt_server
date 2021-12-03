@@ -30,7 +30,7 @@ class ContributionSchema(ma.SQLAlchemySchema):
 class ContributedAssetSchema(ma.SQLAlchemySchema):
     class Meta:
         model = ContributedAsset
-        fields = ("id", "contribution_id", "name")
+        fields = ("id", "contribution_id", "name", "status")
 
 class PackSchema(ma.SQLAlchemySchema):
     class Meta:
