@@ -333,3 +333,24 @@ def api_add_contributed_asset(current_user):
   except:
     raise
 
+@projects.route('/api/edit_contributed_asset', methods=['POST'])
+@token_required
+def api_edit_contributed_asset(current_user):
+  try:
+    data = json.loads(request.data)
+    contributed_asset_id = data['contributed_asset_id']
+    contributed_asset_to_edit = db.session.query(ContributedAsset).filter_by(id=contributed_asset_id).first()
+    if 'status' in data:
+      contributed_asset_to_edit.status = data['status']
+    db.session.commit()
+
+    contributed_asset_serialized = contributed_asset_schema.dump(contributed_asset_to_edit)
+    response = Response(
+        response=json.dumps(contributed_asset_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+  except:
+    raise
+
