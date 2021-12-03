@@ -80,5 +80,5 @@ class Pack(db.Model):
 class AssetType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(), nullable=False)
-    status = db.Column(db.String(), nullable=False, default='pending')
+    status = db.Column(db.String(), default='pending')
     pack_id = db.Column(db.Integer, db.ForeignKey('pack.id'))
