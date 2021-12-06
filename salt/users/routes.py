@@ -157,7 +157,7 @@ def edit_user(current_user):
     if 'username' in data:
         user_to_edit.username = data['username']
     if 'approved_asset_count' in data:
-        user_to_edit.approved_asset_count = data['approved_asset_count']
+        user_to_edit.approved_asset_count = user_to_edit.approved_asset_count + data['approved_asset_count']
     if 'coins' in data:
         user_to_edit.coins = user_to_edit.coins + data['coins']
         # send coins email
