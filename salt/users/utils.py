@@ -5,7 +5,7 @@ from flask import url_for, current_app
 from flask_mail import Message
 from salt import mail
 
-email_sender = 'testerdemosalt@gmail.com'
+email_sender = 'sfaudioguild@gmail.com'
 
 def send_reset_email(user):
     token = user.get_reset_token()
