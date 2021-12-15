@@ -67,6 +67,12 @@ class ContributedAsset(db.Model):
     status = db.Column(db.String(), default='pending')
     contribution_id = db.Column(db.Integer, db.ForeignKey('contribution.id'))
 
+class TrackAsset(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    audio_metadata = db.Column(db.String())
+    active = db.Column(db.Boolean, nullable=False, default=True)
+
 class Pack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
