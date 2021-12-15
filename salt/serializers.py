@@ -1,4 +1,4 @@
-from salt.models import User, Project, Entry, Contribution, Pack, AssetType, ContributedAsset
+from salt.models import TrackAsset, User, Project, Entry, Contribution, Pack, AssetType, ContributedAsset
 from salt import ma
 import logging, json
 
@@ -42,3 +42,9 @@ class AssetTypeSchema(ma.SQLAlchemySchema):
     class Meta:
         model = AssetType
         fields = ("id", "description", "pack_id")
+
+class TrackAssetSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = TrackAsset
+        fields = ("id", "name", "audio_metadata", "active")
+
