@@ -1,11 +1,11 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint, Response, jsonify, current_app
 from salt import db
-import logging, json
-import os
+import logging, json, os, wave
 from salt.models import User, TrackAsset
 from salt.serializers import TrackAssetSchema
 from salt.users.routes import token_required
 import boto3
+import audio_metadata
 from botocore.exceptions import ClientError
 
 main = Blueprint('main', __name__)
@@ -66,20 +66,24 @@ def api_get_track_assets():
 @main.route('/api/add_track_asset', methods=['POST'])
 @token_required
 def api_add_track_asset(current_user):
-    audio_file = request.files['audio_file']
+    audio_file = request.files['audio_file'].read()
     name = request.form['name']
-    # handle track metadata 
-    logging.warning('#########################################################')
-    logging.warning(name, audio_file)
 
-    # track_asset = TrackAsset(name=name)
-    # db.session.add(track_asset)
-    # db.session.commit()
+    metadata = audio_metadata.loads(audio_file)
+    metadata_tags = metadata['tags']
+    metadata_genre = metadata_tags.genre[0]
+    # logging.warning('#########################################################')
+    # logging.warning(metadata_tags)
 
-    # track_asset_serialized = track_asset_schema.dump(track_asset)
-    # response = Response(
-    #     response=json.dumps(track_asset_serialized),
-    #     status=201,
-    #     mimetype='application/json'
-    # )
-    # return response
+    
+    track_asset = TrackAsset(name=name, audio_metadata=metadata_genre)
+    db.session.add(track_asset)
+    db.session.commit()
+
+    track_asset_serialized = track_asset_schema.dump(track_asset)
+    response = Response(
+        response=json.dumps(track_asset_serialized),
+        status=201,
+        mimetype='application/json'
+    )
+    return response
