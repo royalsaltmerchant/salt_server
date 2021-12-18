@@ -7,6 +7,8 @@ from salt.users.routes import token_required
 import boto3
 from botocore.exceptions import ClientError
 from mutagen.wave import WAVE   
+from sqlalchemy import func
+import pickle
 
 main = Blueprint('main', __name__)
 
@@ -65,9 +67,24 @@ def api_get_all_track_assets():
 
 @main.route('/api/get_track_assets/<query>', methods=['GET'])
 def api_get_track_assets(query):
-    track_assets = TrackAsset.query.filter(TrackAsset.audio_metadata.contains(query))
+    logging.warning('**************************************************')
+    track_assets_to_serialize = []
+    all_track_assets = TrackAsset.query.all()
+    for asset in all_track_assets:
+        metadata = asset.audio_metadata
+        metadata_ready_for_list = metadata.replace('"', '',).replace('{', '').replace('}', '').lower()
+        metadata_as_list = list(metadata_ready_for_list.split(","))
+        for item in metadata_as_list:
+            if item == query:
+                track_assets_to_serialize.append(asset)
+    track_assets_by_name = TrackAsset.query.filter(func.lower(TrackAsset.name).contains(query))
+    for asset in track_assets_by_name:
+        if asset in track_assets_to_serialize:
+            pass
+        else:
+            track_assets_to_serialize.append(asset)
 
-    track_assets_serialized = track_assets_schema.dump(track_assets)
+    track_assets_serialized = track_assets_schema.dump(track_assets_to_serialize)
     response = Response(
         response=json.dumps(track_assets_serialized),
         status=200,
