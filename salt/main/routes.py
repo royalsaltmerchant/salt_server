@@ -51,11 +51,23 @@ def create_presigned_url(current_user):
 
     return response
 
-@main.route('/api/get_track_assets', methods=['GET'])
-def api_get_track_assets():
-    all_track_assets = TrackAsset.query.all()
+@main.route('/api/get_track_assets/', methods=['GET'])
+def api_get_all_track_assets():
+    track_assets = TrackAsset.query.all()
 
-    track_assets_serialized = track_assets_schema.dump(all_track_assets)
+    track_assets_serialized = track_assets_schema.dump(track_assets)
+    response = Response(
+        response=json.dumps(track_assets_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+@main.route('/api/get_track_assets/<query>', methods=['GET'])
+def api_get_track_assets(query):
+    track_assets = TrackAsset.query.filter(TrackAsset.audio_metadata.contains(query))
+
+    track_assets_serialized = track_assets_schema.dump(track_assets)
     response = Response(
         response=json.dumps(track_assets_serialized),
         status=200,
