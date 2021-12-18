@@ -5,8 +5,8 @@ from salt.models import User, TrackAsset
 from salt.serializers import TrackAssetSchema
 from salt.users.routes import token_required
 import boto3
-import audio_metadata
 from botocore.exceptions import ClientError
+from mutagen.wave import WAVE   
 
 main = Blueprint('main', __name__)
 
@@ -78,17 +78,13 @@ def api_get_track_assets(query):
 @main.route('/api/add_track_asset', methods=['POST'])
 @token_required
 def api_add_track_asset(current_user):
-    audio_file = request.files['audio_file'].read()
+    audio_file = request.files['audio_file']
     name = request.form['name']
-
-    metadata = audio_metadata.loads(audio_file)
-    metadata_tags = metadata['tags']
-    metadata_genre = metadata_tags.genre[0]
+    wave_file = WAVE(audio_file)
+    metadata = wave_file["TCON"].text
     # logging.warning('#########################################################')
-    # logging.warning(metadata_tags)
-
-    
-    track_asset = TrackAsset(name=name, audio_metadata=metadata_genre)
+    # logging.warning(metadata)
+    track_asset = TrackAsset(name=name, audio_metadata=metadata)
     db.session.add(track_asset)
     db.session.commit()
 
