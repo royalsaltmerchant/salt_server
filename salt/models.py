@@ -2,6 +2,9 @@ from salt import db
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
+from sqlalchemy.types import (
+    ARRAY
+)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,7 +73,9 @@ class ContributedAsset(db.Model):
 class TrackAsset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    audio_metadata = db.Column(db.String())
+    audio_metadata = db.Column('metadata', ARRAY(db.String()))
+    length = db.Column(db.Float())
+    waveform = db.Column('waveform', ARRAY(db.Float))
     active = db.Column(db.Boolean, nullable=False, default=True)
 
 class Pack(db.Model):
