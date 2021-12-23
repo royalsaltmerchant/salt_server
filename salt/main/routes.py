@@ -96,6 +96,7 @@ def api_add_track_asset(current_user):
     logging.warning('#########################################################')
     audio_file = request.files['audio_file']
     name = request.form['name']
+    author = request.form['author']
 
     # get waveform
     waveform_samples_desired = 501
@@ -151,7 +152,7 @@ def api_add_track_asset(current_user):
     # get length
     audio_info = wave_meta.info
     length = round(audio_info.length, 2)
-    track_asset = TrackAsset(name=name, audio_metadata=new_metadata_list, length=length, waveform=combined_results)
+    track_asset = TrackAsset(name=name, author=author, audio_metadata=new_metadata_list, length=length, waveform=combined_results)
     db.session.add(track_asset)
     db.session.commit()
 

@@ -73,6 +73,7 @@ class ContributedAsset(db.Model):
 class TrackAsset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    author = db.Column(db.String(40))
     audio_metadata = db.Column('metadata', ARRAY(db.String()))
     length = db.Column(db.Float())
     waveform = db.Column('waveform', ARRAY(db.Float))
