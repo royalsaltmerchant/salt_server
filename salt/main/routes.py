@@ -65,6 +65,18 @@ def api_get_all_track_assets():
     )
     return response
 
+@main.route('/api/get_track_assets_by_username/<username>', methods=['GET'])
+def api_get_all_track_assets(username):
+    track_assets = db.session.query(TrackAsset).filter_by(author=username).all()
+
+    track_assets_serialized = track_assets_schema.dump(track_assets)
+    response = Response(
+        response=json.dumps(track_assets_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
 @main.route('/api/get_track_assets/<query>', methods=['GET'])
 def api_get_track_assets(query):
     logging.warning('**************************************************')
