@@ -67,7 +67,7 @@ def api_get_all_track_assets():
 
 @main.route('/api/get_track_assets_by_username/<username>', methods=['GET'])
 def api_get_all_track_assets_by_username(username):
-    track_assets = db.session.query(TrackAsset).filter_by(author=username).all()
+    track_assets = db.session.query(TrackAsset).filter_by(author_username=username).all()
 
     track_assets_serialized = track_assets_schema.dump(track_assets)
     response = Response(
@@ -79,7 +79,6 @@ def api_get_all_track_assets_by_username(username):
 
 @main.route('/api/get_track_assets/<query>', methods=['GET'])
 def api_get_track_assets(query):
-    logging.warning('**************************************************')
     track_assets_to_serialize = []
     all_track_assets = TrackAsset.query.all()
     for asset in all_track_assets:
