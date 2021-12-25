@@ -73,7 +73,7 @@ class ContributedAsset(db.Model):
 class TrackAsset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    author_id = db.Column(db.Integer)
+    author_id = db.Column(db.Integer, nullable=False)
     author_username = db.Column(db.String(40))
     audio_metadata = db.Column('metadata', ARRAY(db.String()))
     length = db.Column(db.Float())

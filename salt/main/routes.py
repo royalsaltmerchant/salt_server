@@ -107,7 +107,6 @@ def api_get_track_assets(query):
 def api_add_track_asset(current_user):
     audio_file = request.files['audio_file']
     name = request.form['name']
-    downloads = request.form['downloads']
     author_id = request.form['author_id']
     user_by_author_id = db.session.query(User).filter_by(id=author_id).first()
     author_username = user_by_author_id.username
@@ -166,7 +165,7 @@ def api_add_track_asset(current_user):
     # get length
     audio_info = wave_meta.info
     length = round(audio_info.length, 2)
-    track_asset = TrackAsset(name=name, author_id=author_id, author_username=author_username, downloads=downloads, audio_metadata=new_metadata_list, length=length, waveform=combined_results)
+    track_asset = TrackAsset(name=name, author_id=author_id, author_username=author_username, audio_metadata=new_metadata_list, length=length, waveform=combined_results)
     db.session.add(track_asset)
     db.session.commit()
 
