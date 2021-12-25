@@ -175,3 +175,22 @@ def api_add_track_asset(current_user):
         mimetype='application/json'
     )
     return response
+
+@main.route('/api/edit_track_asset', methods=['POST'])
+@token_required
+def api_edit_track_asset(current_user):
+    data = json.loads(request.data)
+    track_id = data['track_id']
+    track_to_edit = db.session.query(TrackAsset).filter_by(id=track_id).first()
+    if 'downloads' in data:
+        track_to_edit.downloads = data['downloads']
+
+    db.session.commit()
+
+    track_asset_serialized = track_asset_schema.dump(track_to_edit)
+    response = Response(
+        response=json.dumps(track_asset_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
