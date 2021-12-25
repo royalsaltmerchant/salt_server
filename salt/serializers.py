@@ -46,5 +46,5 @@ class AssetTypeSchema(ma.SQLAlchemySchema):
 class TrackAssetSchema(ma.SQLAlchemySchema):
     class Meta:
         model = TrackAsset
-        fields = ("id", "name", "author", "length", "waveform", "audio_metadata", "active")
+        fields = ("id", "name", "author_id", "author_username", "downloads", "length", "waveform", "audio_metadata", "active")
 
