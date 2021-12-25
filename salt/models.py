@@ -73,11 +73,13 @@ class ContributedAsset(db.Model):
 class TrackAsset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    author = db.Column(db.String(40))
+    author_id = db.Column(db.Integer)
+    author_username = db.Column(db.String(40))
     audio_metadata = db.Column('metadata', ARRAY(db.String()))
     length = db.Column(db.Float())
     waveform = db.Column('waveform', ARRAY(db.Float))
     active = db.Column(db.Boolean, nullable=False, default=True)
+    downloads = db.Column(db.Integer, nullable=False, default=0)
 
 class Pack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
