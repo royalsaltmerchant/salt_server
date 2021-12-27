@@ -8,6 +8,7 @@ import boto3
 from botocore.exceptions import ClientError
 from mutagen.wave import WAVE   
 from sqlalchemy import func
+from sqlalchemy.orm.attributes import flag_modified
 import wave
 
 main = Blueprint('main', __name__)
@@ -184,8 +185,16 @@ def api_edit_track_asset(current_user):
     track_to_edit = db.session.query(TrackAsset).filter_by(id=track_id).first()
     if 'downloads' in data:
         track_to_edit.downloads = data['downloads']
-    if 'tag' in data:
-        track_to_edit.audio_metadata.append(data['tag'])
+    if 'add_tag' in data:
+        tag = data['add_tag']
+        track_to_edit.audio_metadata.append(tag)
+        flag_modified(track_to_edit, "audio_metadata")
+        db.session.merge(track_to_edit)
+    if 'remove_tag' in data:
+        tag = data['remove_tag']
+        track_to_edit.audio_metadata.remove(tag)
+        flag_modified(track_to_edit, "audio_metadata")
+        db.session.merge(track_to_edit)      
 
     db.session.commit()
 
