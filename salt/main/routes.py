@@ -157,10 +157,13 @@ def api_add_track_asset(current_user):
 
     # get metadata
     wave_meta = WAVE(audio_file)
-    metadata = wave_meta["TCON"].text
-    item_in_metadata = metadata[0]
-    metadata_ready_for_list = item_in_metadata.replace(',', ' ',).lower()
-    new_metadata_list = metadata_ready_for_list.split()
+    if "TCON" in wave_meta:
+        metadata = wave_meta["TCON"].text
+        item_in_metadata = metadata[0]
+        metadata_ready_for_list = item_in_metadata.replace(',', ' ',).lower()
+        new_metadata_list = metadata_ready_for_list.split()
+    else:
+        new_metadata_list = []
     
     # get length
     audio_info = wave_meta.info
