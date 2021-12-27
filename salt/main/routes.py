@@ -184,6 +184,8 @@ def api_edit_track_asset(current_user):
     track_to_edit = db.session.query(TrackAsset).filter_by(id=track_id).first()
     if 'downloads' in data:
         track_to_edit.downloads = data['downloads']
+    if 'tag' in data:
+        track_to_edit.audio_metadata.append(data['tag'])
 
     db.session.commit()
 
