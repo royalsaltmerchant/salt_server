@@ -208,3 +208,18 @@ def api_edit_track_asset(current_user):
         mimetype='application/json'
     )
     return response
+
+@main.route('/api/remove_track_asset', methods=['POST'])
+@token_required
+def api_remove_track_asset(current_user):
+    data = json.loads(request.data)
+    track_id = data['track_id']
+    track_to_remove = db.session.query(TrackAsset).filter_by(id=track_id).first()
+    
+    db.session.delete(track_to_remove)
+    db.session.commit()
+
+    return Response(
+        response='track has been removed',
+        status=200
+        )
