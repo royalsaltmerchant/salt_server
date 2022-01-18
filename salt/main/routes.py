@@ -7,7 +7,7 @@ from salt.users.routes import token_required
 import boto3
 from botocore.exceptions import ClientError
 from mutagen.wave import WAVE   
-from sqlalchemy import func
+from sqlalchemy import func, asc
 from sqlalchemy.orm.attributes import flag_modified
 import wave
 
@@ -54,32 +54,63 @@ def create_presigned_url(current_user):
 
     return response
 
-@main.route('/api/get_track_assets/', methods=['GET'])
-def api_get_all_track_assets():
-    track_assets = TrackAsset.query.all()
+@main.route('/api/get_track_assets/', methods=['POST'])
+def api_get_paginated_track_assets():
+    data = json.loads(request.data)
+    offset = data["offset"]
+    amount = data["amount"]
+    track_assets = TrackAsset.query.order_by(asc(TrackAsset.name)).offset(offset).limit(amount)
+    track_assets_count = TrackAsset.query.count()
+    remaining_amount = track_assets_count - (offset + amount)
 
     track_assets_serialized = track_assets_schema.dump(track_assets)
+
+    response_data = {
+        "tracks": track_assets_serialized,
+        "track_count": track_assets_count,
+        "remaning_amount": remaining_amount,
+        "offset": offset,
+        "amount": amount
+        }
     response = Response(
-        response=json.dumps(track_assets_serialized),
+        response=json.dumps(response_data),
         status=200,
         mimetype='application/json'
     )
     return response
 
-@main.route('/api/get_track_assets_by_username/<username>', methods=['GET'])
-def api_get_all_track_assets_by_username(username):
-    track_assets = db.session.query(TrackAsset).filter_by(author_username=username).all()
+@main.route('/api/get_track_assets_by_username/<username>', methods=['POST'])
+def api_get_paginated_track_assets_by_username(username):
+    data = json.loads(request.data)
+    offset = data["offset"]
+    amount = data["amount"]
+    track_assets = db.session.query(TrackAsset).filter_by(author_username=username).order_by(asc(TrackAsset.name)).offset(offset).limit(amount)
+
+    track_assets_count = TrackAsset.query.count()
+    remaining_amount = track_assets_count - (offset + amount)
 
     track_assets_serialized = track_assets_schema.dump(track_assets)
+
+    response_data = {
+        "tracks": track_assets_serialized,
+        "track_count": track_assets_count,
+        "remaning_amount": remaining_amount,
+        "offset": offset,
+        "amount": amount
+        }
     response = Response(
-        response=json.dumps(track_assets_serialized),
+        response=json.dumps(response_data),
         status=200,
         mimetype='application/json'
     )
     return response
 
-@main.route('/api/get_track_assets/<query>', methods=['GET'])
+@main.route('/api/get_track_assets/<query>', methods=['POST'])
 def api_get_track_assets(query):
+    data = json.loads(request.data)
+    offset = data["offset"]
+    amount = data["amount"]
+
     track_assets_to_serialize = []
     all_track_assets = TrackAsset.query.all()
     for asset in all_track_assets:
@@ -95,8 +126,17 @@ def api_get_track_assets(query):
             track_assets_to_serialize.append(asset)
 
     track_assets_serialized = track_assets_schema.dump(track_assets_to_serialize)
+
+    response_data = {
+        "tracks": track_assets_serialized,
+        "track_count": len(track_assets_to_serialize),
+        "remaning_amount": 0,
+        "offset": offset,
+        "amount": amount
+        }
+
     response = Response(
-        response=json.dumps(track_assets_serialized),
+        response=json.dumps(response_data),
         status=200,
         mimetype='application/json'
     )
