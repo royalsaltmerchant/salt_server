@@ -59,11 +59,12 @@ def api_get_paginated_track_assets():
     data = json.loads(request.data)
     offset = data["offset"]
     amount = data["amount"]
-    track_assets = TrackAsset.query.order_by(asc(TrackAsset.name)).offset(offset).limit(amount)
-    track_assets_count = track_assets.count()
+    track_assets_all = TrackAsset.query.all()
+    track_assets_paginated = TrackAsset.query.order_by(asc(TrackAsset.name)).offset(offset).limit(amount)
+    track_assets_count = track_assets_all.count()
     remaining_amount = track_assets_count - (offset + amount)
 
-    track_assets_serialized = track_assets_schema.dump(track_assets)
+    track_assets_serialized = track_assets_schema.dump(track_assets_paginated)
 
     response_data = {
         "tracks": track_assets_serialized,
@@ -84,12 +85,13 @@ def api_get_paginated_track_assets_by_username(username):
     data = json.loads(request.data)
     offset = data["offset"]
     amount = data["amount"]
-    track_assets = db.session.query(TrackAsset).filter_by(author_username=username).order_by(asc(TrackAsset.name)).offset(offset).limit(amount)
+    track_assets_by_username = db.session.query(TrackAsset).filter_by(author_username=username)
+    track_assets_by_username_paginated = db.session.query(TrackAsset).filter_by(author_username=username).order_by(asc(TrackAsset.name)).offset(offset).limit(amount)
 
-    track_assets_count = track_assets.count()
+    track_assets_count = track_assets_by_username.count()
     remaining_amount = track_assets_count - (offset + amount)
 
-    track_assets_serialized = track_assets_schema.dump(track_assets)
+    track_assets_serialized = track_assets_schema.dump(track_assets_by_username_paginated)
 
     response_data = {
         "tracks": track_assets_serialized,
