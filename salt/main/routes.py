@@ -85,7 +85,7 @@ def api_get_paginated_track_assets_by_username(username):
     data = json.loads(request.data)
     offset = data["offset"]
     amount = data["amount"]
-    track_assets_by_username = db.session.query(TrackAsset).filter_by(author_username=username)
+    track_assets_by_username = db.session.query(TrackAsset).filter_by(author_username=username).all()
     track_assets_by_username_paginated = db.session.query(TrackAsset).filter_by(author_username=username).order_by(asc(TrackAsset.name)).offset(offset).limit(amount)
 
     track_assets_count = len(track_assets_by_username)
