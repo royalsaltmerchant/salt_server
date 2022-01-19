@@ -66,14 +66,14 @@ class Contribution(db.Model):
 
 class ContributedAsset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    uuid = db.Column(db.Integer, nullable=False)
+    uuid = db.Column(db.String(), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     status = db.Column(db.String(), default='pending')
     contribution_id = db.Column(db.Integer, db.ForeignKey('contribution.id'))
 
 class TrackAsset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    uuid = db.Column(db.Integer, nullable=False)
+    uuid = db.Column(db.String(), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     author_id = db.Column(db.Integer, nullable=False)
     author_username = db.Column(db.String(40))
