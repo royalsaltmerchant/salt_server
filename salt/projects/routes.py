@@ -274,8 +274,9 @@ def api_add_contributed_asset(current_user):
   data = json.loads(request.data)
   contribution_id = data['contribution_id']
   name = data['name']
+  uuid = data['uuid']
 
-  contributed_asset = ContributedAsset(contribution_id=contribution_id, name=name)
+  contributed_asset = ContributedAsset(contribution_id=contribution_id, name=name, uuid=uuid)
   db.session.add(contributed_asset)
   db.session.commit()
 

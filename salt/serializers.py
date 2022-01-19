@@ -30,7 +30,7 @@ class ContributionSchema(ma.SQLAlchemySchema):
 class ContributedAssetSchema(ma.SQLAlchemySchema):
     class Meta:
         model = ContributedAsset
-        fields = ("id", "contribution_id", "name", "status")
+        fields = ("id", "uuid", "contribution_id", "name", "status")
 
 class PackSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -46,5 +46,5 @@ class AssetTypeSchema(ma.SQLAlchemySchema):
 class TrackAssetSchema(ma.SQLAlchemySchema):
     class Meta:
         model = TrackAsset
-        fields = ("id", "name", "author_id", "author_username", "downloads", "length", "waveform", "audio_metadata", "active")
+        fields = ("id", "name", "uuid", "author_id", "author_username", "downloads", "length", "waveform", "audio_metadata", "active")
 
