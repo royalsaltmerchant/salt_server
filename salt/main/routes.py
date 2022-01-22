@@ -152,6 +152,7 @@ def api_add_track_asset(current_user):
     uuid = request.form['uuid']
     author_id = request.form['author_id']
     user_by_author_id = db.session.query(User).filter_by(id=author_id).first()
+    user_by_author_id.upload_count = user_by_author_id.upload_count + 1
     author_username = user_by_author_id.username
 
     # get waveform
@@ -230,6 +231,8 @@ def api_edit_track_asset(current_user):
     data = json.loads(request.data)
     track_id = data['track_id']
     track_to_edit = db.session.query(TrackAsset).filter_by(id=track_id).first()
+    user_by_author_id = db.session.query(User).filter_by(id=track_to_edit.author_id).first()
+    user_by_author_id.upload_count = user_by_author_id.upload_count - 1
     if 'downloads' in data:
         track_to_edit.downloads = data['downloads']
     if 'add_tag' in data:

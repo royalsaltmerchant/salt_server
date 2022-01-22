@@ -17,6 +17,8 @@ class User(db.Model):
     approved_asset_count = db.Column(db.Integer, nullable=True, default=0)
     coins = db.Column(db.Integer, nullable=True, default=0)
     active = db.Column(db.Boolean, default=True)
+    premium = db.Column(db.Boolean, default=False)
+    upload_count = db.Column(db.Integer, default=0)
     contributions = db.relationship('Contribution', backref='user', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):

@@ -150,6 +150,9 @@ def edit_user(current_user):
         user_to_edit.coins = user_to_edit.coins + data['coins']
         # send coins email
         send_update_coins_email(user_to_edit, user_to_edit.coins)
+    if 'premium' in data:
+        user_to_edit.premium = data['premium']
+        
     db.session.commit()
     user_serialized = user_schema.dump(user_to_edit)
 
