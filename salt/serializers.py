@@ -5,7 +5,7 @@ import logging, json
 class UserSchema(ma.SQLAlchemySchema):
     class Meta:
         model = User
-        fields = ("id", "active", "first_name", "last_name", "username", "admin", "email", "password", "approved_asset_count", "coins", "premium", "upload_count", "contributions")
+        fields = ("id", "active", "first_name", "last_name", "username", "admin", "email", "password", "approved_asset_count", "coins", "premium", "upload_count", "about", "contributions")
     contributions = ma.Nested('ContributionSchema', many=True)
 
 class ProjectSchema(ma.SQLAlchemySchema):
