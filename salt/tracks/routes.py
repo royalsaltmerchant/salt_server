@@ -23,7 +23,7 @@ def api_get_paginated_track_assets_by_username(username):
 
     track_assets_by_username = db.session.query(TrackAsset).filter_by(author_username=username).all()
 
-    if query:
+    if query and query != "":
       track_assets_to_serialize = []
       for asset in track_assets_by_username:
           metadata = asset.audio_metadata
@@ -66,7 +66,7 @@ def api_get_track_assets():
     limit = data["limit"]
     query = data["query"]
 
-    if query:
+    if query and query != "":
       track_assets_to_serialize = []
       all_track_assets = TrackAsset.query.all()
       for asset in all_track_assets:
