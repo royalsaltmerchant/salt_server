@@ -126,13 +126,17 @@ def api_get_track_assets(query):
             pass
         else:
             track_assets_to_serialize.append(asset)
-
-    track_assets_serialized = track_assets_schema.dump(track_assets_to_serialize)
+    
+    track_assets_count = len(track_assets_to_serialize)
+    remaining_amount = track_assets_count - (offset + amount)
+    
+    track_assets_offset_limit = track_assets_to_serialize[offset:(amount + offset if amount is not None else None)]
+    track_assets_serialized = track_assets_schema.dump(track_assets_offset_limit)
 
     response_data = {
         "tracks": track_assets_serialized,
-        "track_count": len(track_assets_to_serialize),
-        "remaning_amount": 0,
+        "track_count": track_assets_count,
+        "remaning_amount": remaining_amount,
         "offset": offset,
         "amount": amount
         }
