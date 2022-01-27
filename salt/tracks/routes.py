@@ -5,7 +5,7 @@ from salt.models import User, TrackAsset
 from salt.serializers import TrackAssetSchema
 from salt.users.routes import token_required
 from mutagen.wave import WAVE   
-from sqlalchemy import func, asc
+from sqlalchemy import func, asc, null
 from sqlalchemy.orm.attributes import flag_modified
 import wave
 
@@ -19,11 +19,14 @@ def api_get_paginated_track_assets_by_username(username):
     data = json.loads(request.data)
     offset = data["offset"]
     limit = data["limit"]
-    query = data["query"]
+    if "query" in data:
+        query = data["query"]
+    else:
+         query = None
 
     track_assets_by_username = db.session.query(TrackAsset).filter_by(author_username=username).all()
 
-    if query and query != "":
+    if query:
       track_assets_to_serialize = []
       for asset in track_assets_by_username:
           metadata = asset.audio_metadata
@@ -64,9 +67,12 @@ def api_get_track_assets():
     data = json.loads(request.data)
     offset = data["offset"]
     limit = data["limit"]
-    query = data["query"]
+    if "query" in data:
+        query = data["query"]
+    else:
+         query = None
 
-    if query and query != "":
+    if query:
       track_assets_to_serialize = []
       all_track_assets = TrackAsset.query.all()
       for asset in all_track_assets:
