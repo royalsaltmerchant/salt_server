@@ -34,7 +34,7 @@ def api_get_paginated_track_assets_by_username(username):
             for item in metadata:
                 if item == query:
                     track_assets_to_serialize.append(asset)
-        track_assets_by_name = track_assets_by_username.filter(func.lower(track_assets_by_username.name).contains(query))
+        track_assets_by_name = track_assets_by_name = TrackAsset.query.filter_by(author_username=username).filter(func.lower(TrackAsset.name).contains(query))
         for asset in track_assets_by_name:
             if asset in track_assets_to_serialize:
                 pass
@@ -75,7 +75,7 @@ def api_get_track_assets():
          query = None
 
     all_track_assets = TrackAsset.query.all()
-    
+
     if query:
         track_assets_to_serialize = []
         for asset in all_track_assets:
