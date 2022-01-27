@@ -48,7 +48,8 @@ def api_get_paginated_track_assets_by_username(username):
     
     remaining_amount = track_assets_count - (offset + limit)
 
-    track_assets_serialized = track_assets_schema.dump(track_assets_to_serialize)
+    track_assets_offset_limit = track_assets_to_serialize[offset:(limit + offset)]
+    track_assets_serialized = track_assets_schema.dump(track_assets_offset_limit)
 
     response_data = {
         "tracks": track_assets_serialized,
