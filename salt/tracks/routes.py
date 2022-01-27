@@ -14,32 +14,6 @@ tracks = Blueprint('tracks', __name__)
 track_asset_schema = TrackAssetSchema()
 track_assets_schema = TrackAssetSchema(many=True)
 
-@tracks.route('/api/get_track_assets/', methods=['POST'])
-def api_get_paginated_track_assets():
-    data = json.loads(request.data)
-    offset = data["offset"]
-    limit = data["limit"]
-    track_assets_all = TrackAsset.query.all()
-    track_assets_paginated = TrackAsset.query.order_by(asc(TrackAsset.name)).offset(offset).limit(limit)
-    track_assets_count = len(track_assets_all)
-    remaining_amount = track_assets_count - (offset + limit)
-
-    track_assets_serialized = track_assets_schema.dump(track_assets_paginated)
-
-    response_data = {
-        "tracks": track_assets_serialized,
-        "track_count": track_assets_count,
-        "remaning_amount": remaining_amount,
-        "offset": offset,
-        "amount": limit
-        }
-    response = Response(
-        response=json.dumps(response_data),
-        status=200,
-        mimetype='application/json'
-    )
-    return response
-
 @tracks.route('/api/get_track_assets_by_username/<username>', methods=['POST'])
 def api_get_paginated_track_assets_by_username(username):
     data = json.loads(request.data)
@@ -67,25 +41,30 @@ def api_get_paginated_track_assets_by_username(username):
     )
     return response
 
-@tracks.route('/api/get_track_assets/<query>', methods=['POST'])
-def api_get_track_assets(query):
+@tracks.route('/api/get_track_assets', methods=['POST'])
+def api_get_track_assets():
     data = json.loads(request.data)
     offset = data["offset"]
     limit = data["limit"]
+    query = data["query"]
 
-    track_assets_to_serialize = []
-    all_track_assets = TrackAsset.query.all()
-    for asset in all_track_assets:
-        metadata = asset.audio_metadata
-        for item in metadata:
-            if item == query:
-                track_assets_to_serialize.append(asset)
-    track_assets_by_name = TrackAsset.query.filter(func.lower(TrackAsset.name).contains(query))
-    for asset in track_assets_by_name:
-        if asset in track_assets_to_serialize:
-            pass
-        else:
-            track_assets_to_serialize.append(asset)
+    if query:
+      track_assets_to_serialize = []
+      all_track_assets = TrackAsset.query.all()
+      for asset in all_track_assets:
+          metadata = asset.audio_metadata
+          for item in metadata:
+              if item == query:
+                  track_assets_to_serialize.append(asset)
+      track_assets_by_name = TrackAsset.query.filter(func.lower(TrackAsset.name).contains(query))
+      for asset in track_assets_by_name:
+          if asset in track_assets_to_serialize:
+              pass
+          else:
+              track_assets_to_serialize.append(asset)
+    else:
+      track_assets_paginated = TrackAsset.query.order_by(asc(TrackAsset.name)).offset(offset).limit(limit)
+      track_assets_to_serialize = track_assets_paginated
     
     track_assets_count = len(track_assets_to_serialize)
     remaining_amount = track_assets_count - (offset + limit)
