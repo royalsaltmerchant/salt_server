@@ -28,17 +28,18 @@ def api_get_paginated_track_assets_by_username(username):
 
     track_assets_to_serialize = []
     if query:
-      for asset in track_assets_by_username:
-          metadata = asset.audio_metadata
-          for item in metadata:
-              if item == query:
-                  track_assets_to_serialize.append(asset)
-      track_assets_by_name = track_assets_by_username.filter(func.lower(track_assets_by_username.name).contains(query))
-      for asset in track_assets_by_name:
-          if asset in track_assets_to_serialize:
-              pass
-          else:
-              track_assets_to_serialize.append(asset)
+
+        for asset in track_assets_by_username:
+            metadata = asset.audio_metadata
+            for item in metadata:
+                if item == query:
+                    track_assets_to_serialize.append(asset)
+        track_assets_by_name = track_assets_by_username.filter(func.lower(track_assets_by_username.name).contains(query))
+        for asset in track_assets_by_name:
+            if asset in track_assets_to_serialize:
+                pass
+            else:
+                track_assets_to_serialize.append(asset)
     else:
       track_assets_by_username_paginated = db.session.query(TrackAsset).filter_by(author_username=username).order_by(asc(TrackAsset.name)).offset(offset).limit(limit)
       track_assets_to_serialize = track_assets_by_username_paginated
@@ -74,18 +75,19 @@ def api_get_track_assets():
 
     track_assets_to_serialize = []
     if query:
-      all_track_assets = TrackAsset.query.all()
-      for asset in all_track_assets:
-          metadata = asset.audio_metadata
-          for item in metadata:
-              if item == query:
-                  track_assets_to_serialize.append(asset)
-      track_assets_by_name = TrackAsset.query.filter(func.lower(TrackAsset.name).contains(query))
-      for asset in track_assets_by_name:
-          if asset in track_assets_to_serialize:
-              pass
-          else:
-              track_assets_to_serialize.append(asset)
+        logging.warning('###############################################')
+        all_track_assets = TrackAsset.query.all()
+        for asset in all_track_assets:
+            metadata = asset.audio_metadata
+            for item in metadata:
+                if item == query:
+                    track_assets_to_serialize.append(asset)
+        track_assets_by_name = TrackAsset.query.filter(func.lower(TrackAsset.name).contains(query))
+        for asset in track_assets_by_name:
+            if asset in track_assets_to_serialize:
+                pass
+            else:
+                track_assets_to_serialize.append(asset)
     else:
       track_assets_paginated = TrackAsset.query.order_by(asc(TrackAsset.name)).offset(offset).limit(limit)
       track_assets_to_serialize = track_assets_paginated
