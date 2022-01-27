@@ -75,8 +75,9 @@ def api_get_track_assets():
          query = None
 
     all_track_assets = TrackAsset.query.all()
-    track_assets_to_serialize = []
+    
     if query:
+        track_assets_to_serialize = []
         for asset in all_track_assets:
             metadata = asset.audio_metadata
             for item in metadata:
