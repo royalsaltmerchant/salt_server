@@ -152,6 +152,10 @@ def edit_user(current_user):
         send_update_coins_email(user_to_edit, user_to_edit.coins)
     if 'premium' in data:
         user_to_edit.premium = data['premium']
+    if 'upload_count' in data:
+        user_to_edit.upload_count = data['upload_count']
+    if 'about' in data:
+        user_to_edit.about = data['about']
         
     db.session.commit()
     user_serialized = user_schema.dump(user_to_edit)
