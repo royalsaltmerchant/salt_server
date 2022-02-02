@@ -78,20 +78,22 @@ def api_get_track_assets():
         filter = data["filter"]
     else:
         filter = None
+
     all_track_assets = []
     track_assets_to_serialize = []
 
-    if filter and filter != 'popular':
-        assets = TrackAsset.query.order_by(asc(TrackAsset.name)).all()
-        for asset in assets:
-            for item in asset.audio_metadata:
-                if item == filter:
+    if filter:
+        if filter != 'popular':
+            assets = TrackAsset.query.order_by(asc(TrackAsset.name)).all()
+            for asset in assets:
+                for item in asset.audio_metadata:
+                    if item == filter:
+                        all_track_assets.append(asset)
+        if filter == 'popular':
+            track_assets_by_popularity = TrackAsset.query.order_by(desc(TrackAsset.downloads)).limit(30)
+            for asset in track_assets_by_popularity:
+                if asset.downloads > 0:
                     all_track_assets.append(asset)
-    if filter and filter == 'popular':
-        track_assets_by_popularity = TrackAsset.query.order_by(desc(TrackAsset.downloads)).limit(30)
-        for asset in track_assets_by_popularity:
-            if asset.downloads > 0:
-                all_track_assets.append(asset)
     else:
         assets = TrackAsset.query.order_by(asc(TrackAsset.name)).all()
         for asset in assets:
