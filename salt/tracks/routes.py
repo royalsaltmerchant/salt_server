@@ -78,7 +78,7 @@ def api_get_track_assets():
         filter = data["filter"]
     else:
          filter = None
-    if "poular" in data:
+    if "popular" in data:
         popular = data["popular"]
     else:
          popular = None

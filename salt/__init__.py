@@ -23,7 +23,7 @@ def create_app():
     bcrypt.init_app(app)
     mail.init_app(app)
     ma.init_app(app)
-    cors.init_app(app, resources={r"*": {"origins": "*"}})
+    cors.init_app(app, resources={r"/api/*": {"origins": "*"}}, headers="Content-Type")
 
     from salt.users.routes import users
     from salt.main.routes import main
