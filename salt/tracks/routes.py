@@ -78,23 +78,23 @@ def api_get_track_assets():
         filter = data["filter"]
     else:
         filter = None
-
     all_track_assets = []
     track_assets_to_serialize = []
 
     if filter and filter != 'popular':
-       assets = TrackAsset.query.order_by(asc(TrackAsset.name)).all()
-       for asset in assets:
-           for item in asset.metadata:
-               if item == filter:
-                   all_track_assets.append(asset)
+        assets = TrackAsset.query.order_by(asc(TrackAsset.name)).all()
+        for asset in assets:
+            for item in asset.audio_metadata:
+                if item == filter:
+                    all_track_assets.append(asset)
     if filter and filter == 'popular':
         track_assets_by_popularity = TrackAsset.query.order_by(desc(TrackAsset.downloads)).limit(30)
         for asset in track_assets_by_popularity:
             all_track_assets.append(asset)
     else:
         assets = TrackAsset.query.order_by(asc(TrackAsset.name)).all()
-        all_track_assets.append(assets)
+        for asset in assets:
+            all_track_assets.append(asset)
 
         
     if query:
@@ -109,11 +109,11 @@ def api_get_track_assets():
                 pass
             else:
                 track_assets_to_serialize.append(asset)
+
     else:
         track_assets_to_serialize = all_track_assets
 
-    track_assets_count = len(track_assets_to_serialize)
-    
+    track_assets_count = len(track_assets_to_serialize)    
     remaining_amount = track_assets_count - (offset + limit)
 
     track_assets_offset_limit = track_assets_to_serialize[offset:(limit + offset)]
