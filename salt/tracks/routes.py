@@ -79,18 +79,18 @@ def api_get_track_assets():
     else:
          filter = None
 
-    all_track_assets = TrackAsset.query.filter(TrackAsset.metadata.any(filter)).all() if filter else TrackAsset.query.all()
+    all_track_assets = TrackAsset.query.all()
     track_assets_to_serialize = []
 
-    if filter and filter == 'popular':
-        logging.warning('*************************')
-        track_assets_by_popularity = TrackAsset.query.order_by(desc(TrackAsset.downloads)).limit(30)
-        for asset in track_assets_by_popularity:
-            if asset in track_assets_to_serialize:
-                pass
-            else:
-                track_assets_to_serialize.append(asset)
-                track_assets_count = len(track_assets_to_serialize)
+    # if filter and filter == 'popular':
+    #     logging.warning('*************************')
+    #     track_assets_by_popularity = TrackAsset.query.order_by(desc(TrackAsset.downloads)).limit(30)
+    #     for asset in track_assets_by_popularity:
+    #         if asset in track_assets_to_serialize:
+    #             pass
+    #         else:
+    #             track_assets_to_serialize.append(asset)
+    #             track_assets_count = len(track_assets_to_serialize)
         
     if query:
 
@@ -106,7 +106,7 @@ def api_get_track_assets():
             else:
                 track_assets_to_serialize.append(asset)
         track_assets_count = len(track_assets_to_serialize)
-    if not query:
+    else:
         track_assets_paginated = TrackAsset.query.order_by(asc(TrackAsset.name)).offset(offset).limit(limit)
         track_assets_to_serialize = track_assets_paginated
         track_assets_count = len(all_track_assets)
