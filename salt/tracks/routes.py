@@ -79,7 +79,7 @@ def api_get_track_assets():
 
     if query:
         track_assets_to_serialize = []
-        
+
         if query == 'popular':
             track_assets_by_popularity = TrackAsset.query.order_by(desc(TrackAsset.downloads)).limit(30)
             for asset in track_assets_by_popularity:
@@ -87,6 +87,7 @@ def api_get_track_assets():
                     pass
                 else:
                     track_assets_to_serialize.append(asset)
+                    track_assets_count = len(track_assets_to_serialize)
         else:
             for asset in all_track_assets:
                 metadata = asset.audio_metadata
