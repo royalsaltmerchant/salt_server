@@ -82,7 +82,7 @@ def api_get_track_assets():
     all_track_assets = TrackAsset.query.filter(TrackAsset.metadata.any(filter)).all() if filter else TrackAsset.query.all()
     track_assets_to_serialize = []
 
-    if filter == 'popular':
+    if filter and filter == 'popular':
         logging.warning('*************************')
         track_assets_by_popularity = TrackAsset.query.order_by(desc(TrackAsset.downloads)).limit(30)
         for asset in track_assets_by_popularity:
