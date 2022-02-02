@@ -73,17 +73,17 @@ def api_get_track_assets():
     if "query" in data:
         query = data["query"]
     else:
-         query = None
+        query = None
     if "filter" in data:
         filter = data["filter"]
     else:
-         filter = None
+        filter = None
 
     all_track_assets = []
     track_assets_to_serialize = []
 
     if filter and filter != 'popular':
-       assets = TrackAsset.query.order_by(asc(TrackAsset.name))
+       assets = TrackAsset.query.order_by(asc(TrackAsset.name)).all()
        for asset in assets:
            for item in asset.metadata:
                if item == filter:
@@ -93,7 +93,7 @@ def api_get_track_assets():
         for asset in track_assets_by_popularity:
             all_track_assets.append(asset)
     else:
-        assets = TrackAsset.query.order_by(asc(TrackAsset.name))
+        assets = TrackAsset.query.order_by(asc(TrackAsset.name)).all()
         all_track_assets.append(assets)
 
         
