@@ -109,6 +109,8 @@ def api_get_track_assets():
                 pass
             else:
                 track_assets_to_serialize.append(asset)
+    else:
+        track_assets_to_serialize = all_track_assets
 
     track_assets_count = len(track_assets_to_serialize)
     
