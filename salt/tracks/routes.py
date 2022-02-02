@@ -5,7 +5,7 @@ from salt.models import User, TrackAsset
 from salt.serializers import TrackAssetSchema
 from salt.users.routes import token_required
 from mutagen.wave import WAVE   
-from sqlalchemy import func, asc, null
+from sqlalchemy import desc, func, asc
 from sqlalchemy.orm.attributes import flag_modified
 import wave
 
@@ -79,6 +79,15 @@ def api_get_track_assets():
 
     if query:
         track_assets_to_serialize = []
+        if query == 'popular':
+            track_assets_by_popularity = TrackAsset.query.order_by(desc(TrackAsset.downloads)).limit(30)
+            for asset in track_assets_by_popularity:
+                if asset in track_assets_to_serialize:
+                    pass
+                else:
+                    track_assets_to_serialize.append(asset)
+                    return
+
         for asset in all_track_assets:
             metadata = asset.audio_metadata
             for item in metadata:
