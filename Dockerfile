@@ -33,4 +33,4 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 443
 
-CMD ["gunicorn", "-b", "0.0.0.0:443", "run:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:6000", "run:app"]
