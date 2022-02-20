@@ -123,6 +123,19 @@ def get_user(current_user):
         mimetype='application/json'
     )
 
+@users.route('/api/get_user_by_username', methods=['GET', 'POST'])
+@token_required
+def get_user(current_user):
+    data = json.loads(request.data)
+    username = data['username']
+    user = db.session.query(User).filter_by(username=username).first()
+    user_serialized = user_schema.dump(user)
+    return Response(
+        response=json.dumps(user_serialized),
+        status=200,
+        mimetype='application/json'
+    )
+
 @users.route('/api/users', methods=['GET', 'POST'])
 @token_required
 def get_users(current_user):
