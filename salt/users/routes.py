@@ -125,7 +125,7 @@ def get_user(current_user):
 
 @users.route('/api/get_user_by_username', methods=['GET', 'POST'])
 @token_required
-def get_user(current_user):
+def get_user_by_username(current_user):
     data = json.loads(request.data)
     username = data['username']
     user = db.session.query(User).filter_by(username=username).first()
