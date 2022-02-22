@@ -136,8 +136,7 @@ def get_user_by_username():
     )
 
 @users.route('/api/users', methods=['GET', 'POST'])
-@token_required
-def get_users(current_user):
+def get_users():
     users = db.session.query(User).all()
     users_serialized = users_schema.dump(users)
     return Response(
