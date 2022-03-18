@@ -18,6 +18,7 @@ class User(db.Model):
     coins = db.Column(db.Integer, nullable=True, default=0)
     active = db.Column(db.Boolean, default=True)
     premium = db.Column(db.Boolean, default=False)
+    contributor = db.Column(db.Boolean, default=False)
     upload_count = db.Column(db.Integer, default=0)
     about = db.Column(db.String(), nullable=True)
     contributions = db.relationship('Contribution', backref='user', lazy=True)
