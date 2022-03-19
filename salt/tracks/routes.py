@@ -42,8 +42,8 @@ def api_get_paginated_track_assets_by_username(username):
                 track_assets_to_serialize.append(asset)
         track_assets_count = len(track_assets_to_serialize)
     else:
-        track_assets_by_username_paginated = db.session.query(TrackAsset).filter_by(author_username=username).order_by(asc(TrackAsset.name)).offset(offset).limit(limit)
-        track_assets_to_serialize = track_assets_by_username_paginated
+        track_assets_by_username = db.session.query(TrackAsset).filter_by(author_username=username).order_by(asc(TrackAsset.name))
+        track_assets_to_serialize = track_assets_by_username
         track_assets_count = len(track_assets_by_username)
     
     remaining_amount = track_assets_count - (offset + limit)
