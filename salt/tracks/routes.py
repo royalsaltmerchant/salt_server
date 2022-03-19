@@ -27,14 +27,14 @@ def api_get_paginated_track_assets_by_username(username):
     track_assets_by_username = db.session.query(TrackAsset).filter_by(author_username=username).all()
 
     track_assets_to_serialize = []
+    
     if query:
-
         for asset in track_assets_by_username:
             metadata = asset.audio_metadata
             for item in metadata:
                 if item == query:
                     track_assets_to_serialize.append(asset)
-        track_assets_by_name = track_assets_by_name = TrackAsset.query.filter_by(author_username=username).filter(func.lower(TrackAsset.name).contains(query))
+        track_assets_by_name = TrackAsset.query.filter_by(author_username=username).filter(func.lower(TrackAsset.name).contains(query))
         for asset in track_assets_by_name:
             if asset in track_assets_to_serialize:
                 pass
@@ -42,9 +42,9 @@ def api_get_paginated_track_assets_by_username(username):
                 track_assets_to_serialize.append(asset)
         track_assets_count = len(track_assets_to_serialize)
     else:
-        track_assets_by_username = db.session.query(TrackAsset).filter_by(author_username=username).order_by(asc(TrackAsset.name))
-        track_assets_to_serialize = track_assets_by_username
-        track_assets_count = len(track_assets_by_username)
+        for asset in track_assets_by_username:
+            track_assets_to_serialize.append(asset)
+        track_assets_count = len(track_assets_to_serialize)
     
     remaining_amount = track_assets_count - (offset + limit)
 
