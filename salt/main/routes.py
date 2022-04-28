@@ -16,7 +16,7 @@ main = Blueprint('main', __name__)
 track_asset_schema = TrackAssetSchema()
 track_assets_schema = TrackAssetSchema(many=True)
 
-@main.route('/api/signed_URL', methods=['POST'])
+@main.route('/api/signed_URL_download', methods=['POST'])
 def create_presigned_url():
     s3_client = boto3.client('s3')
     try:
@@ -27,6 +27,24 @@ def create_presigned_url():
                                                     Params={'Bucket': bucket_name,
                                                             'Key': object_name},
                                                     ExpiresIn=86400)
+    except ClientError as e:
+        logging.error(e)
+        return None
+
+    return response
+
+@main.route('/api/signed_URL_upload', methods=['POST'])
+def create_presigned_post():
+    s3_client = boto3.client('s3')
+    try:
+        data = json.loads(request.data)
+        bucket_name = data['bucket_name']
+        object_name = data['object_name']
+        response = s3_client.generate_presigned_post(bucket_name,
+                                                     object_name,
+                                                     Fields=None,
+                                                     Conditions=None,
+                                                     ExpiresIn=3600)
     except ClientError as e:
         logging.error(e)
         return None
