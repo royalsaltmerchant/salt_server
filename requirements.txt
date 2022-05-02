@@ -6,7 +6,9 @@ bitstruct==8.12.1
 blinker==1.4
 boto3==1.17.100
 botocore==1.20.100
+certifi==2021.10.8
 cffi==1.14.5
+charset-normalizer==2.0.12
 click==8.0.1
 Flask==2.0.1
 Flask-Bcrypt==0.7.1
@@ -17,6 +19,7 @@ Flask-Migrate==2.7.0
 Flask-SQLAlchemy==2.5.1
 greenlet==1.0.0
 gunicorn==20.1.0
+idna==3.3
 itsdangerous==2.0.1
 Jinja2==3.0.1
 jmespath==0.10.0
@@ -26,6 +29,7 @@ marshmallow==3.11.1
 marshmallow-sqlalchemy==0.24.2
 more-itertools==8.12.0
 mutagen==1.45.1
+numpy==1.21.5
 pendulum==2.1.2
 pprintpp==0.4.0
 psycopg2==2.9.1
@@ -35,9 +39,12 @@ python-dateutil==2.8.1
 python-dotenv==0.17.0
 python-editor==1.0.4
 pytzdata==2020.1
+requests==2.27.1
 s3transfer==0.4.2
 six==1.16.0
+SoundFile==0.10.3.post1
 SQLAlchemy==1.4.9
+stripe==2.74.0
 tbm-utils==2.6.0
 urllib3==1.26.6
 Werkzeug==2.0.1

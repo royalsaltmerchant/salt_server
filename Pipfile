@@ -39,6 +39,7 @@ MarkupSafe = "==2.0.1"
 SQLAlchemy = "==1.4.9"
 Werkzeug = "==2.0.1"
 mutagen = "*"
+stripe = "*"
 
 [dev-packages]
 
