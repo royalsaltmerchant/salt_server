@@ -1,17 +1,13 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint, Response, jsonify, current_app
-from salt import db
-import logging, json, os, wave, math
-from salt.models import User, TrackAsset
+from flask import request, Blueprint, jsonify
+import logging, json, os
 from salt.serializers import TrackAssetSchema
-from salt.users.routes import token_required
 import boto3
 from botocore.exceptions import ClientError
-from mutagen.wave import WAVE   
-from sqlalchemy import func, asc
-from sqlalchemy.orm.attributes import flag_modified
-import wave
+import stripe
 
 main = Blueprint('main', __name__)
+
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 track_asset_schema = TrackAssetSchema()
 track_assets_schema = TrackAssetSchema(many=True)
@@ -50,4 +46,20 @@ def create_presigned_post():
         return None
 
     return response
+
+@main.route('/api/stripe_intent', methods=['POST'])
+def create_payment():
+    data = json.loads(request.data)
+    # Create a PaymentIntent with the order amount and currency
+    intent = stripe.PaymentIntent.create(
+        amount=data['amount'],
+        currency='usd',
+        receipt_email=data['email'],
+        description=data['description']
+    )
+
+    try:
+        return jsonify({'publishable_key': os.environ.get('STRIPE_PUBLISHABLE_KEY'), 'client_secret': intent.client_secret})
+    except Exception as e:
+        return jsonify(error=str(e)), 403
 
