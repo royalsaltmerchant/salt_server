@@ -205,7 +205,7 @@ def api_add_track_asset(current_user):
     audio_info = wave_meta.info
     length = round(audio_info.length, 2)
     
-    track_asset = TrackAsset(name=name, uuid=uuid, author_id=author_id, author_username=author_username, audio_metadata=new_metadata_list, length=length, waveform=combined_results)
+    track_asset = TrackAsset(name=name, uuid=uuid, author_id=author_id, audio_metadata=new_metadata_list, length=length, waveform=combined_results)
     db.session.add(track_asset)
     db.session.commit()
 

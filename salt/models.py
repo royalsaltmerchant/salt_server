@@ -24,6 +24,7 @@ class User(db.Model):
     upload_count = db.Column(db.Integer, default=0)
     about = db.Column(db.String(), nullable=True)
     contributions = db.relationship('Contribution', backref='user', lazy=True)
+    track_assets = db.relationship('TrackAsset', backref="user", lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -48,7 +49,7 @@ class Project(db.Model):
     image_file = db.Column(db.String(120), nullable=True)
     active = db.Column(db.Boolean, nullable=False, default=False)
     complete = db.Column(db.Boolean, nullable=False, default=False)
-    entries = db.relationship('Entry', backref='Project', lazy=True)
+    entries = db.relationship('Entry', backref='project', lazy=True)
     contributions = db.relationship('Contribution', backref='project', lazy=True)
 
 class Entry(db.Model):
@@ -81,8 +82,7 @@ class TrackAsset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String(), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    author_id = db.Column(db.Integer, nullable=False)
-    author_username = db.Column(db.String(40))
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     audio_metadata = db.Column('metadata', ARRAY(db.String()))
     length = db.Column(db.Float())
     waveform = db.Column('waveform', ARRAY(db.Float))

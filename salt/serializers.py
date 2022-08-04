@@ -7,6 +7,7 @@ class UserSchema(ma.SQLAlchemySchema):
         model = User
         fields = ("id", "active", "first_name", "last_name", "username", "admin", "email", "address", "phone", "password", "approved_asset_count", "coins", "premium", "upload_count", "about", "contributor", "contributions")
     contributions = ma.Nested('ContributionSchema', many=True)
+    track_assets = ma.Nested('TrackAssetSchema', many=True)
 
 class ProjectSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -31,7 +32,7 @@ class ContributedAssetSchema(ma.SQLAlchemySchema):
     class Meta:
         model = ContributedAsset
         fields = ("id", "uuid", "contribution_id", "name", "status")
-
+        
 class PackSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Pack
@@ -46,5 +47,5 @@ class AssetTypeSchema(ma.SQLAlchemySchema):
 class TrackAssetSchema(ma.SQLAlchemySchema):
     class Meta:
         model = TrackAsset
-        fields = ("id", "name", "uuid", "author_id", "author_username", "downloads", "length", "waveform", "audio_metadata", "active")
+        fields = ("id", "name", "uuid", "author_id", "downloads", "length", "waveform", "audio_metadata", "active", "user")
 
