@@ -23,8 +23,8 @@ def api_get_paginated_track_assets_by_username(username):
         query = data["query"]
     else:
          query = None
-
-    track_assets_by_username = db.session.query(TrackAsset).filter_by(author_username=username).all()
+    user = db.session.query(User).filter_by(username=username).first()
+    track_assets_by_username = db.session.query(TrackAsset).filter_by(author_id=user.id).all()
 
     track_assets_to_serialize = []
     
